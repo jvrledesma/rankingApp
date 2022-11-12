@@ -18,13 +18,20 @@
 
 package com.span.interview.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Abstract class to represent the general properties of a Team, it could be extended depending on any new requirement
  * for managing basketball, football, volleyball, or other king of sports teams.
  */
-public abstract class Team {
+@Getter
+@Setter
+@AllArgsConstructor
+public abstract class Team{
     private String teamName;
-    private short wonMatches;
-    private short lossMatches;
-    private short totalPoints;
+    private int wonMatches;
+    private int lossMatches;
+    private int totalPoints;
 }

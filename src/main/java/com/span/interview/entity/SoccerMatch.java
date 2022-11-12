@@ -27,8 +27,18 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@AllArgsConstructor
-public class SoccerMatch extends Match{
-    private short goalsForLocal;
-    private short goalsForVisitor;
+public class SoccerMatch extends Match<SoccerTeam>{
+    private int goalsForLocal;
+    private int goalsForVisitor;
+
+    public SoccerMatch(SoccerTeam localTeam, SoccerTeam visitorTeam) {
+        super(localTeam, visitorTeam);
+    }
+
+    public SoccerMatch(SoccerTeam localTeam, SoccerTeam visitorTeam, int goalsForLocal, int goalsForVisitor) {
+        super(localTeam, visitorTeam);
+        this.goalsForLocal=goalsForLocal;
+        this.goalsForVisitor=goalsForVisitor;
+    }
+
 }

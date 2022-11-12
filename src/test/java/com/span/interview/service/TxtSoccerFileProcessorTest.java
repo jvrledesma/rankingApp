@@ -18,12 +18,16 @@
 
 package com.span.interview.service;
 
+import com.span.interview.entity.SoccerMatch;
 import com.span.interview.enums.ErrorCode;
 import com.span.interview.exception.RankingAppException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -57,10 +61,33 @@ class TxtSoccerFileProcessorTest {
     void process_GivenCorrectInput_DeliversListOfSoccerMatches() throws RankingAppException {
 
         final ClassLoader classLoader = getClass().getClassLoader();
-        final File file = new File(classLoader.getResource("SampleValidInput.txt").getFile());
+        final File file = new File(Objects.requireNonNull(classLoader.getResource("SampleValidInput.txt")).getFile());
 
         final TxtSoccerFileProcessor txtSoccerFileProcessor = new TxtSoccerFileProcessor();
-        //txtSoccerFileProcessor.process(file.getAbsolutePath());
-        assertTrue(txtSoccerFileProcessor.process(file.getAbsolutePath()).isEmpty());
+        final List<SoccerMatch> soccerMatchList = txtSoccerFileProcessor.process(file.getAbsolutePath());
+
+        assertFalse(soccerMatchList.isEmpty());
+        assertEquals(5, soccerMatchList.size());
+
+        /*Check against the first match in the test file
+         *  Local - Visitor
+         * Lions 3, Snakes 3
+         */
+        final SoccerMatch soccerMatch = soccerMatchList.get(0);
+        assertEquals("Lions".toLowerCase(), soccerMatch.getLocalTeam().getTeamName());
+        assertEquals("Snakes".toLowerCase(), soccerMatch.getVisitorTeam().getTeamName());
+        assertEquals(3, soccerMatch.getGoalsForLocal());
+        assertEquals(3, soccerMatch.getGoalsForVisitor());
+    }
+
+    @Test
+    void process_GivenFileWithMalformedData_DeliversAnEmptyList() throws RankingAppException {
+        final ClassLoader classLoader = getClass().getClassLoader();
+        final File file = new File(Objects.requireNonNull(classLoader.getResource("SampleMalformedInput.txt")).getFile());
+
+        final TxtSoccerFileProcessor txtSoccerFileProcessor = new TxtSoccerFileProcessor();
+        final List<SoccerMatch> soccerMatchList = txtSoccerFileProcessor.process(file.getAbsolutePath());
+
+        assertTrue(soccerMatchList.isEmpty());
     }
 }

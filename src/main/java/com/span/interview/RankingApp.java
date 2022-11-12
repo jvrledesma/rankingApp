@@ -26,7 +26,20 @@ public class RankingApp
     private static final Logger LOGGER = LoggerFactory.getLogger(RankingApp.class);
 
     public static void main( String[] args ) {
-        LOGGER.info("Starting the Sports Rankig App...");
+        LOGGER.info("Starting the Sports Ranking App...");
 
+        /*Scanner scanner = new Scanner(System.in);
+        int option = 1;
+        while (option!=4){
+            printMenu(options);
+            try {
+                option = scanner.nextInt();
+            }
+            catch (InputMismatchException ex){
+                System.out.println("Please enter an integer value between 1 and " + options.length);
+                scanner.next();
+            }
+        }
+    }*/
     }
 }

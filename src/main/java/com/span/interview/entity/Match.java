@@ -18,11 +18,18 @@
 
 package com.span.interview.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Abstract class that represents a match, it could be extended depending on any new requirement for managing basketball,
  * football, volleyball, or other kind of sport matches.
  */
-public abstract class Match {
-    Team localTeam;
-    Team visitorTeam;
+@Getter
+@Setter
+@AllArgsConstructor
+public abstract class Match<T extends Team> {
+    T localTeam;
+    T visitorTeam;
 }

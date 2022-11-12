@@ -37,7 +37,7 @@ public class FileProcessorFactory {
             case FOOTBALL:
                 //TODO: Throw a not implemented exception
                 return null;
-            case BASCKETBALL:
+            case BASKETBALL:
                 //TODO: Throw a not implemented exception
                 return null;
             default:

@@ -23,5 +23,6 @@ import com.span.interview.entity.Match;
 import java.util.List;
 
 public interface Ranking <T extends Match>{
-    void processMatch(List<T> matchList);
+    void processMatchList(List<T> matchList);
+    void printRanking();
 }

@@ -16,13 +16,21 @@
  *  *******************************************************************************************************
  */
 
-package com.span.interview.enums;
+package com.span.interview.util;
 
-/**
- * Enum to determine the type of match, used to determine the file processor and ranking service to use.
- */
-public enum MatchType {
-    SOCCER,
-    FOOTBALL,
-    BASKETBALL;
+import com.span.interview.entity.SoccerTeam;
+
+import java.util.Comparator;
+
+public class RankingOrder implements Comparator<SoccerTeam> {
+
+    @Override
+    public int compare(SoccerTeam o1, SoccerTeam o2) {
+
+        if(o1.getTotalPoints() == o2.getTotalPoints()){
+            return o1.getTeamName().compareTo(o2.getTeamName());
+        }
+
+        return Integer.compare(o2.getTotalPoints(),o1.getTotalPoints());
+    }
 }

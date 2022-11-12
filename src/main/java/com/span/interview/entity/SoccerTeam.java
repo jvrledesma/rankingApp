@@ -18,18 +18,24 @@
 
 package com.span.interview.entity;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.Objects;
 
 /**
  * Concrete class that represents a SoccerTeam.
  */
 @Getter
 @Setter
-@AllArgsConstructor
-public class SoccerTeam extends Team{
+public class SoccerTeam extends Team {
 
-    private short tiedMatches;
+    private int tiedMatches;
+
+    public SoccerTeam(String teamName, int wonMatches, int lossMatches, int totalPoints, final int tiedMatches) {
+        super(teamName, wonMatches, lossMatches, totalPoints);
+        this.tiedMatches = tiedMatches;
+    }
+
 
 }

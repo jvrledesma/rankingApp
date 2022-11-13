@@ -16,17 +16,19 @@
  *  *******************************************************************************************************
  */
 
-package com.span.interview.util;
+package com.span.interview.enums;
 
-public final class DisplayMenu {
+import com.span.interview.entity.SoccerMatch;
+import com.span.interview.service.FileProcessor;
+import com.span.interview.service.TxtSoccerFileProcessor;
 
-    private DisplayMenu(){}
+public enum Processor {
 
-    public static void printMenu(final String[] options){
-        for(final String option : options){
-            System.out.println(option);
-        }
-        System.out.print("Choose your option: ");
-    }
-
+    TXT_PROCESOR{
+      @Override
+      public FileProcessor<SoccerMatch> make(){
+            return new TxtSoccerFileProcessor();
+      }
+    };
+    public abstract <T> FileProcessor<T> make();
 }

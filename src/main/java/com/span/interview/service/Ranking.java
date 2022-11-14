@@ -18,11 +18,14 @@
 
 package com.span.interview.service;
 
-import com.span.interview.entity.Match;
-
 import java.util.List;
 
-public interface Ranking <T extends Match>{
+/**
+ * General interface which define the contract for ranking calculation.
+ *
+ * @param <T> the type of objects used to calculate rankings.
+ */
+public interface Ranking<T> {
     void processMatchList(List<T> matchList);
     void printRanking();
 }

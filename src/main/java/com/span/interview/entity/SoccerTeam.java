@@ -21,10 +21,12 @@ package com.span.interview.entity;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Objects;
-
 /**
  * Concrete class that represents a SoccerTeam.
+ * <p>
+ * A soccer team also has the tied matches
+ *
+ * @author Javier Salgado
  */
 @Getter
 @Setter
@@ -32,6 +34,15 @@ public class SoccerTeam extends Team {
 
     private int tiedMatches;
 
+    /**
+     * Constructs a soccer team.
+     *
+     * @param teamName    the name of the team
+     * @param wonMatches  the number of won matches
+     * @param lossMatches the number of loss matches
+     * @param totalPoints the number of total points in the league
+     * @param tiedMatches the number of tied matches
+     */
     public SoccerTeam(String teamName, int wonMatches, int lossMatches, int totalPoints, final int tiedMatches) {
         super(teamName, wonMatches, lossMatches, totalPoints);
         this.tiedMatches = tiedMatches;

@@ -21,18 +21,38 @@ package com.span.interview.exception;
 import com.span.interview.enums.ErrorCode;
 import lombok.Getter;
 
+/**
+ * A custom exception to manage the error cases associates with the business logic for file processing and ranking
+ * calculation.
+ *
+ * @author Javier Salgado
+ */
 @Getter
-public class RankingAppException extends Exception{
+public class RankingAppException extends Exception {
 
     private final ErrorCode errorCode;
 
-    public RankingAppException(final String errorMessage, final ErrorCode errorCode){
+    /**
+     * Constructs a new RankingException with custom error message and an error code from mapped enum.
+     *
+     * @param errorMessage the custom message of this exception
+     * @param errorCode    error code enumeration associated with the exception
+     */
+    public RankingAppException(final String errorMessage, final ErrorCode errorCode) {
         super(errorMessage);
-        this.errorCode=errorCode;
+        this.errorCode = errorCode;
     }
 
+    /**
+     * Constructs a new RankingException with custom error message, an error code from mapped enum, and the root cause
+     * exception.
+     *
+     * @param errorMessage the custom message of this exception
+     * @param errorCode    error code enumeration associated with the exception
+     * @param err          the root cause exception
+     */
     public RankingAppException(final String errorMessage, final ErrorCode errorCode, final Throwable err) {
         super(errorMessage, err);
-        this.errorCode=errorCode;
+        this.errorCode = errorCode;
     }
 }

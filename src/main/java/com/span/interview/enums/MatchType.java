@@ -20,9 +20,11 @@ package com.span.interview.enums;
 
 /**
  * Enum to determine the type of match, used to determine the file processor and ranking service to use.
+ *
+ * @author Javier Salgado
  */
 public enum MatchType {
     SOCCER,
     FOOTBALL,
-    BASKETBALL;
+    BASKETBALL
 }

@@ -20,17 +20,26 @@ package com.span.interview.service;
 
 import com.span.interview.entity.SoccerMatch;
 import com.span.interview.exception.RankingAppException;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * Tests for SoccerRanking.
+ *
+ * @author Javier Salgado
+ */
 class SoccerRankingTest {
 
     @Test
+    @DisplayName("Processing a valid list of soccer matches and print results")
     void processMatchList_ByGivenListOfSoccerMatch_SuccessCalculation() throws RankingAppException {
         final ClassLoader classLoader = getClass().getClassLoader();
         final File file = new File(Objects.requireNonNull(classLoader.getResource("SampleValidInput.txt")).getFile());
@@ -42,5 +51,25 @@ class SoccerRankingTest {
         soccerRanking.processMatchList(soccerMatchList);
         assertFalse(soccerRanking.getSoccerRankingMap().isEmpty());
         soccerRanking.printRanking();
+        assertFalse(soccerRanking.getSortedResults().isEmpty());
+    }
+
+    @Test
+    @DisplayName("Processing empty list of soccer matches wont provoke errors")
+    void processMatchList_ByGivenEmptyList_NoProcessDone() {
+        final List<SoccerMatch> soccerMatchList = Collections.emptyList();
+
+        final SoccerRanking soccerRanking = new SoccerRanking();
+        soccerRanking.processMatchList(soccerMatchList);
+        assertTrue(soccerRanking.getSoccerRankingMap().isEmpty());
+    }
+
+    @Test
+    @DisplayName("Processing null list of soccer matches wont provoke errors")
+    void processMatchList_ByGivenNullList_NoProcessDone() {
+
+        final SoccerRanking soccerRanking = new SoccerRanking();
+        soccerRanking.processMatchList(null);
+        assertTrue(soccerRanking.getSoccerRankingMap().isEmpty());
     }
 }

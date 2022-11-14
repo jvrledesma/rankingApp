@@ -22,15 +22,25 @@ import com.span.interview.entity.SoccerTeam;
 
 import java.util.Comparator;
 
+/**
+ * Custom comparator class for sorting {@link SoccerTeam} objects considering the logic:
+ * <p>
+ * Objects must be ordered by the total points, if two or more teams have the same number of points,
+ * they printed in alphabetical order.
+ *
+ * @author Javier Salgado
+ */
 public class RankingOrder implements Comparator<SoccerTeam> {
 
     @Override
     public int compare(SoccerTeam o1, SoccerTeam o2) {
 
-        if(o1.getTotalPoints() == o2.getTotalPoints()){
+        //Alphabetical using team's names when points are the same
+        if (o1.getTotalPoints() == o2.getTotalPoints()) {
             return o1.getTeamName().compareTo(o2.getTeamName());
         }
 
-        return Integer.compare(o2.getTotalPoints(),o1.getTotalPoints());
+        //Descending order considering total points
+        return Integer.compare(o2.getTotalPoints(), o1.getTotalPoints());
     }
 }

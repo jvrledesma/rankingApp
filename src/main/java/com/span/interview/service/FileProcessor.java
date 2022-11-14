@@ -18,7 +18,6 @@
 
 package com.span.interview.service;
 
-import com.span.interview.entity.Match;
 import com.span.interview.exception.RankingAppException;
 
 import java.util.List;
@@ -26,8 +25,8 @@ import java.util.List;
 /**
  * Generic interface for file processing which guaranties  that only objects of type Match could be managed.
  *
- * @param <T>
+ * @param <T> the type of objects which hold the information retrieved from file processing.
  */
-public interface FileProcessor<T extends Match>{
+public interface FileProcessor<T> {
     List<T> process(String filePath) throws RankingAppException;
 }

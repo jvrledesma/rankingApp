@@ -20,17 +20,30 @@ package com.span.interview.enums;
 
 import lombok.Getter;
 
+/**
+ * Enumeration for managing the possible error codes and their respective message.
+ * Some errors that could happen during the execution of the app are concentrated here.
+ *
+ * @author Javier Salgado
+ */
 @Getter
 public enum ErrorCode {
 
-    //File related exceptions
-    WRONG_FILE_EXTENSION("F001", "The provided file has a not supported extension."),
-    IO_ERROR("F002", "There was a problem when trying to open and read the file.");
+    //File related errors
+    FILE_NOT_EXISTS("F001", "The file for the provided path does not exist, please verify."),
+    DIRECTORY_NOT_SUPPORTED("F002", "Please provide a path to a file, directories are not supported."),
+    UNSUPPORTED_MIME_TYPE("F003", "Binary files are not supported."),
+    WRONG_FILE_EXTENSION("F004", "Specify a valid path and with a valid extension."),
+    IO_ERROR("F005", "There was a problem when trying to access/open/read the file."),
+
+    //Logic related errors
+    FILE_PROCESSOR_NOT_FOUND("R001", "There is no file processor associated with your parameters"),
+    RANKING_PROCESSOR_NOT_FOUND("R002", "There is no ranking processor associated with your parameters");
 
     private final String code;
     private final String errorMessage;
 
-    ErrorCode(final String code, final String errorMessage){
+    ErrorCode(final String code, final String errorMessage) {
         this.code = code;
         this.errorMessage = errorMessage;
     }

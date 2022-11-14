@@ -18,28 +18,53 @@
 
 package com.span.interview;
 
+import com.span.interview.entity.SoccerMatch;
+import com.span.interview.enums.MatchType;
+import com.span.interview.enums.SupportedFileExtension;
+import com.span.interview.exception.RankingAppException;
+import com.span.interview.service.FileProcessor;
+import com.span.interview.service.Ranking;
+import com.span.interview.util.FileProcessorFactory;
+import com.span.interview.util.RankingFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class RankingApp
-{
+import java.util.Scanner;
+
+public class RankingApp {
     private static final Logger LOGGER = LoggerFactory.getLogger(RankingApp.class);
 
-    public static void main( String[] args ) {
-        LOGGER.info("Starting the Sports Ranking App...");
+    public static void main(String[] args) {
+        if (args.length < 3) {
+            System.out.println("Proper Usage is: java RankingApp filePath SPORT FILE_EXTENSION");
+        }else {
 
-        /*Scanner scanner = new Scanner(System.in);
-        int option = 1;
-        while (option!=4){
-            printMenu(options);
+            final RankingFactory rankingFactory = new RankingFactory();
+            final FileProcessorFactory fileProcessorFactory = new FileProcessorFactory();
             try {
-                option = scanner.nextInt();
-            }
-            catch (InputMismatchException ex){
-                System.out.println("Please enter an integer value between 1 and " + options.length);
-                scanner.next();
+                final FileProcessor<SoccerMatch> txtSoccerFileProcessor =
+                        fileProcessorFactory.getProcessor(MatchType.valueOf(args[1]), SupportedFileExtension.valueOf(args[2]));
+                final Ranking<SoccerMatch> soccerMatchRanking = rankingFactory.getRankingProcessor(MatchType.SOCCER);
+
+                processFileAndRanking(txtSoccerFileProcessor, soccerMatchRanking, args[0]);
+
+            } catch (final RankingAppException rankingAppException) {
+                System.out.println(rankingAppException.getErrorCode().getCode() + " " + rankingAppException.getErrorCode().getErrorMessage());
+                LOGGER.error("Something wrong happened {} - {}", rankingAppException.getErrorCode().getCode(),
+                        rankingAppException.getErrorCode().getErrorMessage());
             }
         }
-    }*/
+    }
+
+    private static void processFileAndRanking(final FileProcessor<SoccerMatch> txtSoccerFileProcessor,
+                                              final Ranking<SoccerMatch> soccerMatchRanking, final String filePath) {
+        try {
+            soccerMatchRanking.processMatchList(txtSoccerFileProcessor.process(filePath));
+            soccerMatchRanking.printRanking();
+        } catch (final RankingAppException rankingAppException) {
+            System.out.println(rankingAppException.getErrorCode().getCode() + " " + rankingAppException.getErrorCode().getErrorMessage());
+            LOGGER.error("Something wrong happened {} - {}", rankingAppException.getErrorCode().getCode(),
+                    rankingAppException.getErrorCode().getErrorMessage());
+        }
     }
 }

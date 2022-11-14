@@ -20,37 +20,40 @@ package com.span.interview.util;
 
 import com.span.interview.enums.ErrorCode;
 import com.span.interview.enums.MatchType;
+import com.span.interview.enums.Processor;
 import com.span.interview.enums.SupportedFileExtension;
 import com.span.interview.exception.RankingAppException;
 import com.span.interview.service.FileProcessor;
-import com.span.interview.service.TxtSoccerFileProcessor;
 
+/**
+ * The file processor factory, creates objects depending on the match type and the supported file extension.
+ *
+ * @author Javier Salgado
+ */
 public class FileProcessorFactory {
 
-    private FileProcessorFactory(){}
-
-    //TODO: Manage nulls in a better way
-    public static FileProcessor getFileProcessorInstance(final MatchType matchType, final String filePath) throws RankingAppException {
-        switch (matchType){
-            case SOCCER:
-                return getSoccerFileProcessor(filePath);
-            case FOOTBALL:
-                //TODO: Throw a not implemented exception
-                return null;
-            case BASKETBALL:
-                //TODO: Throw a not implemented exception
-                return null;
-            default:
-                return null;
-        }
+    public FileProcessorFactory() {
+        //Empty constructor
     }
 
-    private static FileProcessor getSoccerFileProcessor(final String filePath) throws RankingAppException {
-        if(FileValidator.isValidExtension(filePath, SupportedFileExtension.TXT)){
-            return new TxtSoccerFileProcessor();
+    /**
+     * Method to build and get the concrete file processor object.
+     *
+     * @param matchType              the required match type for building the objects
+     * @param supportedFileExtension the supported file extension for the objects
+     * @param <T>                    the match type
+     * @return the concrete class built
+     * @throws RankingAppException if there is no current implementation for the requested parameters.
+     */
+    public <T> FileProcessor<T> getProcessor(final MatchType matchType,
+                                             final SupportedFileExtension supportedFileExtension) throws RankingAppException {
+
+        if (matchType == MatchType.SOCCER && SupportedFileExtension.TXT == supportedFileExtension) {
+            return Processor.TXT_PROCESSOR.make();
         }
 
-        throw new RankingAppException("FileProcessor getSoccerFileProcessor", ErrorCode.WRONG_FILE_EXTENSION);
-
+        throw new RankingAppException("File processor not found", ErrorCode.FILE_PROCESSOR_NOT_FOUND,
+                new UnsupportedOperationException("The operation requested is not yet supported by Ranking App"));
     }
+
 }

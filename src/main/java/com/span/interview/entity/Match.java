@@ -25,6 +25,10 @@ import lombok.Setter;
 /**
  * Abstract class that represents a match, it could be extended depending on any new requirement for managing basketball,
  * football, volleyball, or other kind of sport matches.
+ * <p>
+ * A match, generally speaking, is composed by two teams.
+ *
+ * @author Javier Salgado
  */
 @Getter
 @Setter

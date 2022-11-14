@@ -22,13 +22,20 @@ import com.span.interview.entity.SoccerMatch;
 import com.span.interview.service.FileProcessor;
 import com.span.interview.service.TxtSoccerFileProcessor;
 
+/**
+ * Enumeration for supporting the factory pattern for building objects of type FileProcessor.
+ * This enumeration is open for adding new objects as required.
+ *
+ * @author Javier Salgado
+ */
 public enum Processor {
 
-    TXT_PROCESOR{
-      @Override
-      public FileProcessor<SoccerMatch> make(){
+    TXT_PROCESSOR {
+        @Override
+        public FileProcessor<SoccerMatch> make() {
             return new TxtSoccerFileProcessor();
-      }
+        }
     };
+
     public abstract <T> FileProcessor<T> make();
 }

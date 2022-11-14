@@ -20,14 +20,20 @@ package com.span.interview.enums;
 
 import lombok.Getter;
 
+/**
+ * Enumeration for specifying the type of files tha can be processed to get information from matches.
+ * This enumeration is open for adding new objects as required.
+ *
+ * @author Javier Salgado
+ */
 @Getter
 public enum SupportedFileExtension {
-    TXT     ("txt"),
-    JSON    ("json");
+    TXT("txt"),
+    JSON("json");
 
     private final String value;
 
-    SupportedFileExtension(final String value){
+    SupportedFileExtension(final String value) {
         this.value = value;
     }
 }

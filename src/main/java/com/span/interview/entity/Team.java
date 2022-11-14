@@ -25,11 +25,17 @@ import lombok.Setter;
 /**
  * Abstract class to represent the general properties of a Team, it could be extended depending on any new requirement
  * for managing basketball, football, volleyball, or other king of sports teams.
+ * <p>
+ * In a league, a team has the properties:
+ * - Team name
+ * - The number of won matches
+ * - The number of loss matches
+ * - The total points in the league
  */
 @Getter
 @Setter
 @AllArgsConstructor
-public abstract class Team{
+public abstract class Team {
     private String teamName;
     private int wonMatches;
     private int lossMatches;

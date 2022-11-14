@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
@@ -50,28 +51,28 @@ public class TxtSoccerFileProcessor implements FileProcessor<SoccerMatch> {
 
     /**
      * Method that performs the txt file processing containing the information of soccer matches in the format:
-     *
-     *  Lions 3, Snakes 3
-     *  Tarantulas 1, FC Awesome 0
-     *  Lions 1, FC Awesome 1
-     *  Tarantulas 3, Snakes 1
-     *  Lions 4, Grouches 0
-     *  ...
-     *
-     *  The considerations for processing the file are:
-     *  - Validate that file has the correct extension, txt, could be considered redundant validation but since this
-     *      class can be used by different flows is better to take care of it.
-     *  - For performance, in case a large file is processed, process the file as stream, this will load items in a
-     *      lazy loading fashion
-     *  - The stream processing includes:
-     *      - String normalization, considering everything as lower-case
-     *      - Replace spaces before and after comma and colon in case file has a different separator
-     *      - This processing will deliver lines in a format like "lions 3,snakes 3"
-     *      - A pattern matcher is used to separate each group in the line "text" "number","text" "number" (2 groups
-     *          before and after separator)
-     *      - In case of lines that does not match, a null object will be returned and will be filtered in the pipeline
-     *          to be discarded
-     *      - Terminal operation returns the final list of SoccerMatch objects.
+     * <p>
+     * Lions 3, Snakes 3
+     * Tarantulas 1, FC Awesome 0
+     * Lions 1, FC Awesome 1
+     * Tarantulas 3, Snakes 1
+     * Lions 4, Grouches 0
+     * ...
+     * <p>
+     * The considerations for processing the file are:
+     * - Validate that file has the correct extension, txt, could be considered redundant validation but since this
+     * class can be used by different flows is better to take care of it.
+     * - For performance, in case a large file is processed, process the file as stream, this will load items in a
+     * lazy loading fashion
+     * - The stream processing includes:
+     * - String normalization, considering everything as lower-case
+     * - Replace spaces before and after comma and colon in case file has a different separator
+     * - This processing will deliver lines in a format like "lions 3,snakes 3"
+     * - A pattern matcher is used to separate each group in the line "text" "number","text" "number" (2 groups
+     * before and after separator)
+     * - In case of lines that does not match, a null object will be returned and will be filtered in the pipeline
+     * to be discarded
+     * - Terminal operation returns the final list of SoccerMatch objects.
      *
      * @param filePath the path of the file to read
      * @return List<SoccerMatch> the list of SoccerMatch objects
@@ -80,24 +81,19 @@ public class TxtSoccerFileProcessor implements FileProcessor<SoccerMatch> {
     @Override
     public List<SoccerMatch> process(final String filePath) throws RankingAppException {
 
-        LOGGER.info("Processing file: {}", filePath);
-
-        //As this file processor could be used independently, validation for file format has to be done
-        if(!FileValidator.isValidExtension(filePath, SupportedFileExtension.TXT)){
-            throw new RankingAppException("FileProcessor getSoccerFileProcessor", ErrorCode.WRONG_FILE_EXTENSION);
-        }
+        //Will throw an exception if something goes wrong
+        FileValidator.isValidFile(filePath, SupportedFileExtension.TXT);
 
         //If file validation is succeeded the process the file
-        try(final Stream<String> fileLines = Files.lines(Paths.get(filePath))) {
+        try (final Stream<String> fileLines = Files.lines(Paths.get(filePath))) {
 
             return fileLines
-                    //.map(String::toLowerCase)
                     .map(fileLine -> fileLine.replaceAll(SEPARATOR_PATTERN, ","))
                     .map(this::getSoccerMatch)
                     .filter(Objects::nonNull)
                     .collect(Collectors.toList());
 
-        } catch (final IOException ioException) {
+        } catch (final IOException | UncheckedIOException ioException) {
 
             throw new RankingAppException("Error in TxtSoccerFIleProcessor", ErrorCode.IO_ERROR, ioException);
         }
@@ -108,31 +104,32 @@ public class TxtSoccerFileProcessor implements FileProcessor<SoccerMatch> {
      * This method will process the text line extracted from the file stream processing.
      * It will use a Pattern to extract the information for local and visitor teams, this information will be used
      * to construct the SoccerMatch object.
-     *
+     * <p>
      * If the pattern matcher gets info, there will be 4 groups returned:
-     *  - Group 1: Local team name
-     *  - Group 2: Local team goals
-     *  - Group 3: Visitor team name
-     *  - Group 4: Visitor team goals
-     *
-     *  This information will be used to construct each team info and the construct the soccer match.
-     *
-     *  Malformed lines, which does not match the pattern will be logged as warning and skipped, null will be returned,
-     *  this null must be filtered in the pipeline processing.
+     * - Group 1: Local team name
+     * - Group 2: Local team goals
+     * - Group 3: Visitor team name
+     * - Group 4: Visitor team goals
+     * <p>
+     * This information will be used to construct each team info and the construct the soccer match.
+     * <p>
+     * Malformed lines, which does not match the pattern will be logged as warning and skipped, null will be returned,
+     * this null must be filtered in the pipeline processing.
      *
      * @param fileLine the file line to be processed to extract soccer match data
      * @return {@link SoccerMatch} object with the soccer match info
      */
     private SoccerMatch getSoccerMatch(final String fileLine) {
         final Matcher matcher = SOCCER_MATCH_INFO_PATTERN.matcher(fileLine);
-        if (matcher.matches() && matcher.groupCount() == 4) {
-            final SoccerTeam soccerTeamA = new SoccerTeam(matcher.group(1),  0,  0,  0,0);
-            final SoccerTeam soccerTeamB = new SoccerTeam(matcher.group(3),  0,  0,  0,0);
+        if ( matcher.matches()) {
+            final SoccerTeam soccerTeamA = new SoccerTeam(matcher.group(1), 0, 0, 0, 0);
+            final SoccerTeam soccerTeamB = new SoccerTeam(matcher.group(3), 0, 0, 0, 0);
 
             return new SoccerMatch(soccerTeamA, soccerTeamB,
                     Short.parseShort(matcher.group(2)), Short.parseShort(matcher.group(4)));
         }
 
+        //If there is no match based on pattern, log a warning message
         LOGGER.warn("Malformed line {} won't be processed", fileLine);
         return null;
     }
